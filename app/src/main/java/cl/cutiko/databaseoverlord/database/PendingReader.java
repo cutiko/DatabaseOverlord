@@ -27,8 +27,9 @@ public class PendingReader extends AsyncTask<Void, Integer, List<Pending>> {
     protected List<Pending> doInBackground(Void... params) {
         List<Pending> pendings = new ArrayList<>();
         SQLiteDatabase database = pendingOpenHelper.getReadableDatabase();
-        String select = "SELECT * FROM " + PendingOpenHelper.PENDING_TABLE;
-        Cursor cursor = database.rawQuery(select, null);
+        String select = "SELECT * FROM " + PendingOpenHelper.PENDING_TABLE + " WHERE " + PendingOpenHelper.STATUS_COLUMN + " = ?";
+        String[] arguments = {"FALSE"};
+        Cursor cursor = database.rawQuery(select, arguments);
         if (cursor != null) {
             for (int i = 0; i < cursor.getCount(); i++) {
                 cursor.moveToPosition(i);
