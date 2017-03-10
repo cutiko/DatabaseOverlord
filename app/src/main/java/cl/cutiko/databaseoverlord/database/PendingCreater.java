@@ -1,8 +1,13 @@
 package cl.cutiko.databaseoverlord.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cl.cutiko.databaseoverlord.models.Pending;
 
@@ -10,7 +15,7 @@ import cl.cutiko.databaseoverlord.models.Pending;
  * Created by cutiko on 09-03-17.
  */
 
-public class PendingCreater extends PendingTransactor<Pending, Integer, Integer> {
+public class PendingCreater extends PendingTransactor<Pending, Integer, List<Pending>> {
 
 
     public PendingCreater(Context context) {
@@ -18,28 +23,30 @@ public class PendingCreater extends PendingTransactor<Pending, Integer, Integer>
     }
 
     @Override
-    protected Integer doInBackground(Pending... params) {
+    protected List<Pending> doInBackground(Pending... params) {
+        List<Pending> pendings = new ArrayList<>();
         if (params != null) {
             SQLiteDatabase database = openHelper.getWritableDatabase();
             if (database != null) {
-                int errors = 0;
                 int size = params.length;
                 for (int i = 0; i < size; i++) {
+                    Pending pending = params[i];
                     try {
-                        database.execSQL(insert(params[i]));
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(PendingOpenHelper.NAME_COLUMN, pending.getName());
+                        contentValues.put(PendingOpenHelper.STATUS_COLUMN, String.valueOf(pending.getStatus()).toUpperCase());
+                        long id = database.insert(PendingOpenHelper.PENDING_TABLE, null, contentValues);
+                        pending.setId((int) id);
+                        pendings.add(pending);
                     } catch (SQLException e) {
-                        errors++;
+                        Log.d(getClass().getSimpleName(), e.getMessage());
                     }
                     publishProgress(i);
                 }
                 database.close();
-                return size - errors;
-            } else {
-                return 0;
             }
-        } else {
-            return 0;
         }
+        return pendings;
     }
 
     private String insert(Pending pending){

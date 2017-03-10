@@ -70,6 +70,11 @@ public class PendingsAdapter extends RecyclerView.Adapter<PendingsAdapter.ViewHo
 
     }
 
+    public void addPending(Pending pending) {
+        pendings.add(pending);
+        notifyItemInserted(pendings.size()-1);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         CheckBox status;

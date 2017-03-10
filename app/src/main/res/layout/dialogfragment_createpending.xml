@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/pendingEt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/bg_white_bordered_primary_light"
+        android:hint="Escriba un pendiente"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:singleLine="true" />
+
+    <ImageButton
+        android:id="@+id/saveBtn"
+        android:layout_width="34dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_accent"
+        android:src="@mipmap/ic_save_white_24dp" />
+
+
+</LinearLayout>
