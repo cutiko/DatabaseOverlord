@@ -1,10 +1,8 @@
 package cl.cutiko.databaseoverlord.database;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-
-import java.util.List;
 
 import cl.cutiko.databaseoverlord.models.Pending;
 
@@ -12,35 +10,35 @@ import cl.cutiko.databaseoverlord.models.Pending;
  * Created by cutiko on 09-03-17.
  */
 
-public class PendingCreater extends AsyncTask<List<Pending>, Integer, Boolean> {
+public class PendingCreater extends PendingTransactor<Pending, Integer, Integer> {
 
-    private final PendingOpenHelper pendingOpenHelper;
 
     public PendingCreater(Context context) {
-        pendingOpenHelper = new PendingOpenHelper(context);
+        super(context);
     }
 
     @Override
-    protected Boolean doInBackground(List<Pending>... params) {
+    protected Integer doInBackground(Pending... params) {
         if (params != null) {
-            List<Pending> pendings = params[0];
-            if (pendings != null) {
-                SQLiteDatabase database = pendingOpenHelper.getWritableDatabase();
-                if (database != null) {
-                    for (int i = 0; i < pendings.size(); i++) {
-                        database.execSQL(insert(pendings.get(i)));
-                        publishProgress(i);
+            SQLiteDatabase database = openHelper.getWritableDatabase();
+            if (database != null) {
+                int errors = 0;
+                int size = params.length;
+                for (int i = 0; i < size; i++) {
+                    try {
+                        database.execSQL(insert(params[i]));
+                    } catch (SQLException e) {
+                        errors++;
                     }
-                    database.close();
-                    return true;
-                } else {
-                    return false;
+                    publishProgress(i);
                 }
+                database.close();
+                return size - errors;
             } else {
-                return false;
+                return 0;
             }
         } else {
-            return false;
+            return 0;
         }
     }
 
