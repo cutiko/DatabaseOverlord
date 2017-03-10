@@ -37,6 +37,8 @@ public class PendingReader extends PendingTransactor<Void, Integer, List<Pending
                 pendings.add(pending);
                 Log.d("PENDING", pending.getId() + " " + pending.getName() + " " + pending.getStatus());
             }
+            database.close();
+            cursor.close();
         }
         return pendings;
     }

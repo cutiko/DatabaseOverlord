@@ -23,6 +23,7 @@ public class PendingUpdater extends PendingTransactor<Integer, Integer, Boolean>
                 try {
                     //Yes, you could use database.update() just felt like writing the query
                     database.execSQL(query(params[0]));
+                    database.close();
                     return true;
                 } catch (SQLException e) {
                     return false;
