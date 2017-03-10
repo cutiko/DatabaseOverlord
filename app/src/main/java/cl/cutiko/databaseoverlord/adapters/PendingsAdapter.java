@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cl.cutiko.databaseoverlord.R;
+import cl.cutiko.databaseoverlord.database.PendingUpdater;
 import cl.cutiko.databaseoverlord.models.Pending;
 
 /**
@@ -39,16 +40,15 @@ public class PendingsAdapter extends RecyclerView.Adapter<PendingsAdapter.ViewHo
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+            public void onCheckedChanged(final CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            /*Pending auxPending = pendings.get(holder.getAdapterPosition());
-                            auxPending.setDone(true);
-                            auxPending.save();
+                            Pending auxPending = pendings.get(holder.getAdapterPosition());
+                            new PendingUpdater(compoundButton.getContext()).execute(auxPending.getId());
                             pendings.remove(holder.getAdapterPosition());
-                            notifyItemRemoved(holder.getAdapterPosition());*/
+                            notifyItemRemoved(holder.getAdapterPosition());
                         }
                     }, 100);
                 }
