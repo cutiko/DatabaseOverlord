@@ -7,11 +7,11 @@ import android.os.AsyncTask;
  * Created by cutiko on 10-03-17.
  */
 
-public abstract class PendingTransactor<Param, Progress, ResultObject> extends AsyncTask<Param, Progress, ResultObject> {
+abstract class PendingTransactor<Param, Progress, ResultObject> extends AsyncTask<Param, Progress, ResultObject> {
 
-    protected final PendingOpenHelper openHelper;
+    final PendingOpenHelper openHelper;
 
-    public PendingTransactor(Context context) {
+    PendingTransactor(Context context) {
         openHelper = new PendingOpenHelper(context);
     }
 
