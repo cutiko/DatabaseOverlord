@@ -2,6 +2,7 @@ package cl.cutiko.databaseoverlord.database;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -26,20 +27,25 @@ public class PendingReader extends PendingTransactor<Void, Integer, List<Pending
         SQLiteDatabase database = openHelper.getReadableDatabase();
         String select = "SELECT * FROM " + PendingOpenHelper.PENDING_TABLE + " WHERE " + PendingOpenHelper.STATUS_COLUMN + " = ?";
         String[] arguments = {"FALSE"};
-        Cursor cursor = database.rawQuery(select, arguments);
-        if (cursor != null) {
-            for (int i = 0; i < cursor.getCount(); i++) {
-                cursor.moveToPosition(i);
-                int id = Integer.parseInt(cursor.getString(0));
-                String name = cursor.getString(1);
-                boolean status = cursor.getString(2).equals("TRUE");
-                Pending pending = new Pending(id, name, status);
-                pendings.add(pending);
-                Log.d("PENDING", pending.getId() + " " + pending.getName() + " " + pending.getStatus());
+        try {
+            Cursor cursor = database.rawQuery(select, arguments);
+            if (cursor != null) {
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cursor.moveToPosition(i);
+                    int id = Integer.parseInt(cursor.getString(0));
+                    String name = cursor.getString(1);
+                    boolean status = cursor.getString(2).equals("TRUE");
+                    Pending pending = new Pending(id, name, status);
+                    pendings.add(pending);
+                    Log.d("PENDING", pending.getId() + " " + pending.getName() + " " + pending.getStatus());
+                }
+                cursor.close();
             }
             database.close();
-            cursor.close();
+        } catch (SQLException e) {
+            Log.d(getClass().getSimpleName(), e.getMessage());
         }
+
         return pendings;
     }
 }
