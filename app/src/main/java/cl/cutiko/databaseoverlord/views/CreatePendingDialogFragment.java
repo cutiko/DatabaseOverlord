@@ -14,10 +14,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import java.util.List;
-
 import cl.cutiko.databaseoverlord.R;
-import cl.cutiko.databaseoverlord.database.PendingCreater;
 import cl.cutiko.databaseoverlord.models.Pending;
 
 /**
@@ -61,7 +58,7 @@ public class CreatePendingDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Pending pending = new Pending(editText.getText().toString(), false);
-                new CreatePending().execute(pending);
+                //new CreatePending().execute(pending);
             }
         });
     }
@@ -75,7 +72,7 @@ public class CreatePendingDialogFragment extends DialogFragment {
         );
     }
 
-    private class CreatePending extends PendingCreater {
+    /*private class CreatePending extends PendingCreater {
 
         public CreatePending() {
             super(getContext());
@@ -88,7 +85,7 @@ public class CreatePendingDialogFragment extends DialogFragment {
             }
             dismiss();
         }
-    }
+    }*/
 
 
 }
